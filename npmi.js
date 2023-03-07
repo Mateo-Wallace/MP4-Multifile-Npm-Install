@@ -7,11 +7,9 @@ var os = require("os");
 // get library path
 var lib = resolve(__dirname, "./");
 
-fs.readdirSync(lib).forEach(function (mod) {
-  var modPath = join(lib, mod);
-
+var npmInstallFunction = (path) => {
   // ensure path has package.json
-  if (!fs.existsSync(join(modPath, "package.json"))) {
+  if (!fs.existsSync(join(path, "package.json"))) {
     return;
   }
 
@@ -21,7 +19,28 @@ fs.readdirSync(lib).forEach(function (mod) {
   // install folder
   cp.spawn(npmCmd, ["i"], {
     env: process.env,
-    cwd: modPath,
+    cwd: path,
     stdio: "inherit",
   });
+};
+
+fs.readdirSync(lib).forEach(function (mod) {
+  var modPath = join(lib, mod);
+
+  if (fs.existsSync(join(modPath, "Solved" || "Unsolved"))) {
+    var libArray = [];
+    var subLibSolved = join(modPath, "Solved");
+    var subLibUnsolved = join(modPath, "Unsolved");
+    libArray.push(subLibSolved, subLibUnsolved);
+
+    libArray.forEach((subLib) => {
+      fs.readdirSync(subLib).forEach(function (subMod) {
+        var subModPath = join(subLib, subMod);
+
+        npmInstallFunction(subModPath);
+      });
+    });
+  }
+
+  npmInstallFunction(modPath);
 });
