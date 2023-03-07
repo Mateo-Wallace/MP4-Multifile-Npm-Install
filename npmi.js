@@ -21,12 +21,14 @@ var npmInstallFunction = (path) => {
   });
 };
 
-// get library path
+// get current folder path
 var lib = resolve(__dirname, "./");
 
-// checks all folders within parent directory for package.json
+// loop through all files within directory
 fs.readdirSync(lib).forEach(function (mod) {
+  // checks all folders within parent directory for package.json
   var modPath = join(lib, mod);
+  npmInstallFunction(modPath);
 
   // digs 1 folder deeper to check for package.json
   if (fs.existsSync(join(modPath, "Solved" || "Unsolved"))) {
@@ -38,6 +40,4 @@ fs.readdirSync(lib).forEach(function (mod) {
       npmInstallFunction(subModPath);
     });
   }
-
-  npmInstallFunction(modPath);
 });
