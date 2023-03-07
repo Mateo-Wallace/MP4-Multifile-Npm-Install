@@ -31,7 +31,7 @@ fs.readdirSync(lib).forEach(function (mod) {
   npmInstallFunction(modPath);
 
   // digs 1 folder deeper to check for package.json
-  if (fs.existsSync(join(modPath, "Solved" || "Unsolved"))) {
+  if (fs.statSync(modPath).isDirectory()) {
     var subLib = resolve(modPath, "./");
 
     fs.readdirSync(subLib).forEach(function (subMod) {
